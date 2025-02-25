@@ -22,6 +22,15 @@ body {
     transform-style: preserve-3d;
 }
 
+audio {
+    display: none;
+}
+
+audio::-webkit-media-controls-panel {
+    display: none !important;
+    visibility: hidden !important;
+}
+
 #drag-container,
 #spin-container {
     position: relative;

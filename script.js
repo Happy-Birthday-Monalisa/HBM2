@@ -72,7 +72,6 @@ if (bgMusicURL) {
 `;
 }
 
-// setup events
 document.onpointerdown = function (e) {
     clearInterval(odrag.timer);
     e = e || window.event;
@@ -114,6 +113,33 @@ document.onpointerdown = function (e) {
 document.onmousewheel = function (e) {
     e = e || window.event;
     var d = e.wheelDelta / 20 || -e.detail;
+    console.log(e.wheelDelta, e.detail);
+
     radius += d;
     init(1);
 };
+
+document.ontouchstart = function (e) {
+    if (e.touches && e.touches.length > 1) {
+        this.onpointermove = this.onpointerup = null;
+        var d = 30;
+        let startDist = getDistance(e.touches);
+        document.ontouchmove = async function (e) {
+            dist = getDistance(e.touches);
+
+            if (dist < startDist) d = -30;
+        };
+        document.ontouchend = function () {
+            document.ontouchmove = null;
+            radius += d;
+            init(1);
+        };
+    }
+    return false;
+};
+
+function getDistance(touches) {
+    const dx = touches[0].pageX - touches[1].pageX;
+    const dy = touches[0].pageY - touches[1].pageY;
+    return Math.sqrt(dx * dx + dy * dy);
+}
